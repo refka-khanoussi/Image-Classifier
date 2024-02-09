@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classification</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            margin-right: 10px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        strong {
+            color: #333;
+        }
+
+        p.error {
+            color: red;
+            margin-top: 10px;
+        }
+
+        form.show-results-form {
+            display: inline-block;
+        }
+
+        /* Updated styling for displaying all results on the same line */
+        .all-results {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .result-box {
+            text-align: center;
+            width: 30%;
+            margin-bottom: 20px;
+        }
+
+        .uploaded-image {
+            width: 100px; /* Set a fixed width */
+            height: 100px; /* Maintain aspect ratio */
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Image Classification</h1>
+
+    <form action="/" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".png, .jpg, .jpeg">
+        <button type="submit">Upload and Classify</button>
+    </form>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    {% if results %}
+        <div class="all-results">
+            <h2 style="width: 100%;">All Results</h2>
+            {% for r in results %}
+                <div class="result-box">
+                    <strong>{{ r.filename }}</strong>
+                    <p> </p>
+                    <img src="{{ url_for('static', filename='uploads/' + r.filename) }}" alt="Uploaded Image" class="uploaded-image">
+                    <ul>
+                        <li>Size Class: {{ r.size_class }}</li>
+                        <li>Color Class: {{ r.color_class }}</li>
+                        <li>Pixels Class: {{ r.pixels_class }}</li>
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Add a button to show all results -->
+    <form action="/show_all_results" method="GET" class="show-results-form">
+        <button type="submit">Show All Results</button>
+    </form>
+</body>
+</html>
