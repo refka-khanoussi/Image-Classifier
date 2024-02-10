@@ -102,11 +102,11 @@ def classify_images_in_folder(folder_path):
     overall_start_time = datetime.now()
 
     # Resize images in parallel
-    with concurrent.futures.ThreadPoolExecutor(max_workers=60) as resize_executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as resize_executor:
         resize_futures = {resize_executor.submit(resize_image, os.path.join(folder_path, file), os.path.join("static/resized", file), (200, 200)): file for file in os.listdir(folder_path) if file.lower().endswith(('.png', '.jpg', '.jpeg'))}
 
     # Classify images after resizing
-    with concurrent.futures.ThreadPoolExecutor(max_workers=60) as classify_executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as classify_executor:
         classify_futures = {classify_executor.submit(classify_image, os.path.join("static/resized", file)): file for file in os.listdir("static/resized") if file.lower().endswith(('.png', '.jpg', '.jpeg'))}
 
     # Wait for all threads to complete
